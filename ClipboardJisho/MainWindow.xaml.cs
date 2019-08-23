@@ -83,25 +83,29 @@ namespace ClipboardJisho
 
             var node = tagger.ParseToNode(ClipboardNotification.Content);
 
-            var words = new List<Word>();
             MainGrid.Children.Clear();
 
             while (node != null)
             {
                 if (node.CharType > 0)
                 {
-                    //Console.WriteLine($"{node.Surface}, {node.Feature}");
 
-                    //words.Add(new Word(node.Surface));
                     db.FindDefinition(node.Surface).ContinueWith(word =>
                     {
+
+                        var alreadyExists = (from CardControl child in MainGrid.Children
+                                             where child.Kanji == word.Result.Japanese
+                                             select child.Kanji).Count() > 0;
+
+                        if (alreadyExists)
+                            return;
+
                         var temp = new CardControl(word.Result, this);
                         if (word.Result.Glossary.Count > 0 && word.Result.Japanese != null)
                             MainGrid.Children.Add(temp);
 
 
                     }, TaskScheduler.FromCurrentSynchronizationContext());
-
 
                 }
 

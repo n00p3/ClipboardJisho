@@ -5,5 +5,6 @@ Launch VN and Textractor and this program will tokenize sentences and show you d
 TODO:
 
 - Integrate with Textractor
-- Update content on back thread
+- ~~Update content on back thread~~
 - Move settings to separate window
+- ~~Remove duplicate words~~
