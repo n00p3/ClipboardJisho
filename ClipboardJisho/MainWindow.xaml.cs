@@ -60,7 +60,7 @@ namespace ClipboardJisho
 
             //var notifier = new ClipboardNotification();
             ClipboardNotification.ClipboardUpdate += ClipboardChanged;
-                
+
         }
 
         void ClipboardChanged(object sender, EventArgs e)
@@ -93,11 +93,15 @@ namespace ClipboardJisho
                     //Console.WriteLine($"{node.Surface}, {node.Feature}");
 
                     //words.Add(new Word(node.Surface));
-                    var word = db.FindDefinition(node.Surface);
-                    
-                    var temp = new CardControl(word, this);
-                    if (word.Glossary.Count > 0 && word.Japanese != null)
-                        MainGrid.Children.Add(temp);
+                    db.FindDefinition(node.Surface).ContinueWith(word =>
+                    {
+                        var temp = new CardControl(word.Result, this);
+                        if (word.Result.Glossary.Count > 0 && word.Result.Japanese != null)
+                            MainGrid.Children.Add(temp);
+
+
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+
 
                 }
 

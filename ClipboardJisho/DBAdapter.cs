@@ -34,28 +34,31 @@ namespace ClipboardJisho
             }
         }
 
-        public Word FindDefinition(string word)
+        public async Task<Word> FindDefinition(string word)
         {
-            using(var command = new SQLiteCommand("SELECT * FROM entry WHERE kanji = @word LIMIT 3", connection))
+            return await Task.Run(() =>
             {
-                command.Parameters.Add(new SQLiteParameter("@word", word));
-                var dataAdapter = new SQLiteDataAdapter(command);
-                var dataTable = new DataTable();
-                dataAdapter.Fill(dataTable);
-
-                var ret = new Word
+                using (var command = new SQLiteCommand("SELECT * FROM entry WHERE kanji = @word LIMIT 3", connection))
                 {
-                    Glossary = dataTable.AsEnumerable().Select(row => row.Field<string>("gloss")).ToList(),
-                    Japanese = word,
-                    Ruby = dataTable.AsEnumerable().Select(row => row.Field<string>("reading")).ToList()
-                };
-                return ret;
-            }
+                    command.Parameters.Add(new SQLiteParameter("@word", word));
+                    var dataAdapter = new SQLiteDataAdapter(command);
+                    var dataTable = new DataTable();
+                    dataAdapter.Fill(dataTable);
+
+                    var ret = new Word
+                    {
+                        Glossary = dataTable.AsEnumerable().Select(row => row.Field<string>("gloss")).ToList(),
+                        Japanese = word,
+                        Ruby = dataTable.AsEnumerable().Select(row => row.Field<string>("reading")).ToList()
+                    };
+                    return ret;
+                }
+            });
         }
 
         ~DBAdapter()
         {
-            connection.Close();
+                connection.Close();
+            }
         }
     }
-}
