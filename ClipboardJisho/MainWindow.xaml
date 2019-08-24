@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="612.05" Width="271.045"
         Background="#2D2D30" ScrollViewer.CanContentScroll="True"
-        xmlns:fa="http://schemas.fontawesome.io/icons/" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" 
+        xmlns:fa="http://schemas.fontawesome.io/icons/" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave" 
         
         >
     <Grid x:Name="OuterGrid">
@@ -18,7 +18,6 @@
 
 
         <Grid VerticalAlignment="Bottom" Height="30" Margin="5" >
-
             <Button x:Name="SettingsButton" Grid.Column="0"  FontSize="12" Content="settings" Height="25" HorizontalAlignment="Left" Click="SettingsButton_Click"/>
 
         </Grid>

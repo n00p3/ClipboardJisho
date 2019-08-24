@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -24,6 +26,7 @@ namespace ClipboardJisho
         NMeCab.MeCabTagger tagger;
         DBAdapter db;
         public int test = 100;
+        private bool isMouseOverWindow = false;
 
         public MainWindow()
         {
@@ -43,6 +46,28 @@ namespace ClipboardJisho
             Width = SettingsManager.WindowSize.Width;
             Height = SettingsManager.WindowSize.Height;
 
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    Thread.Sleep(50);
+
+                    if (isMouseOverWindow)
+                        continue;
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (!SettingsManager.MonitorMousePosition)
+                            return;
+
+                        var maxH = MyScrollViewer.ScrollableHeight;
+                        var moveTo = maxH * MousePositionPercentage();
+                        MyScrollViewer.ScrollToVerticalOffset(moveTo);
+                    });
+
+                }
+
+            });
         }
 
         void ClipboardChanged(object sender, EventArgs e)
@@ -101,6 +126,7 @@ namespace ClipboardJisho
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             (new SettingsWindow()).ShowDialog();
+            Topmost = SettingsManager.AlwaysOnTop;
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -116,6 +142,33 @@ namespace ClipboardJisho
         private void Window_LocationChanged(object sender, EventArgs e)
         {
             SettingsManager.WindowPosition = new System.Drawing.Point(Convert.ToInt32(Left), Convert.ToInt32(Top));
+        }
+
+        static Point GetMousePositionWindowsForms()
+        {
+            System.Drawing.Point point = System.Windows.Forms.Control.MousePosition;
+            return new Point(point.X, point.Y);
+        }
+
+        /// <summary>
+        /// Mouse position (Y) in percentages.
+        /// </summary>
+        /// <returns> Double in range 0..1 </returns>
+        static double MousePositionPercentage()
+        {
+            var pos = GetMousePositionWindowsForms();
+            var maxH = Screen.PrimaryScreen.Bounds.Height;
+            return pos.Y / (maxH - 1);
+        }
+
+        private void Window_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            isMouseOverWindow = true;
+        }
+
+        private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            isMouseOverWindow = false;
         }
     }
 }
