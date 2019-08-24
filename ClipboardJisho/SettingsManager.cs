@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,126 @@ namespace ClipboardJisho
         private static bool? _monitorMousePosition;
         private static Point? _windowPosition;
         private static System.Windows.Size? _windowSize;
+        private static readonly string _filterFile = "filter.txt";
+        private static List<string> _filterBuffor; // To avoid reading file unnecessarily.
+        public static string FilterContent
+        {
+            get
+            {
+                if (!File.Exists(_filterFile))
+                    File.WriteAllText(_filterFile,
+@"# Lines starting with `#` are ignored.
+# Ignore particles and one letter words:
+^あ$
+^い$
+^う$
+^え$
+^お$
+^ぁ$
+^ぃ$
+^ぅ$
+^ぇ$
+^ぉ$
+^か$
+^き$
+^く$
+^け$
+^こ$
+^さ$
+^し$
+^す$
+^せ$
+^そ$
+^た$
+^ち$
+^っ$
+^つ$
+^て$
+^と$
+^な$
+^に$
+^ぬ$
+^ね$
+^の$
+^は$
+^ひ$
+^ふ$
+^へ$
+^ほ$
+^ま$
+^み$
+^む$
+^め$
+^も$
+^や$
+^ゆ$
+^よ$
+^ら$
+^り$
+^る$
+^れ$
+^ろ$
+^わ$
+^を$
+^が$
+^ぎ$
+^ぐ$
+^げ$
+^ご$
+^ざ$
+^じ$
+^ず$
+^ぜ$
+^ぞ$
+^だ$
+^ぢ$
+^づ$
+^で$
+^ど$
+^ば$
+^び$
+^ぶ$
+^べ$
+^ぼ$
+^ぱ$
+^ぴ$
+^ぷ$
+^ぺ$
+^ぽ$
+^ん$
 
+^ます$
+^ない$
+^って$
+");
+
+                return File.ReadAllText(_filterFile);
+            }
+            set
+            {
+                File.WriteAllText(_filterFile, value);
+                _filterBuffor = value
+                        .Split('\n')
+                        .Where(it => !it.Trim().StartsWith("#") && it.Trim() != "")
+                        .Select(it => it.Trim())
+                        .ToList();
+            }
+        }
+
+        public static List<string> BufferedFilter
+        {
+            get
+            {
+                if (_filterBuffor == null)
+                    _filterBuffor = FilterContent
+                        .Split('\n')
+                        .Where(it => !it.Trim().StartsWith("#") && it.Trim() != "")
+                        .Select(it => it.Trim())
+                        .ToList();
+
+                return _filterBuffor;
+            }
+        }
 
         public static int JpMaxLen
         {

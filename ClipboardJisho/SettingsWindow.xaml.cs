@@ -28,6 +28,7 @@ namespace ClipboardJisho
             MonitorMouseCheck.IsChecked = SettingsManager.MonitorMousePosition;
             JpMaxLen.Value = SettingsManager.JpMaxLen;
             EngMaxLen.Value = SettingsManager.EngMaxLen;
+            FilterTextBox.Text = SettingsManager.FilterContent;
         }
 
         private void JapaneseFontButton_Click(object sender, RoutedEventArgs e)
@@ -87,6 +88,11 @@ namespace ClipboardJisho
                 return;
 
             SettingsManager.EngMaxLen = Convert.ToInt32(e.NewValue);
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SettingsManager.FilterContent = ((TextBox)e.Source).Text;
         }
     }
 }

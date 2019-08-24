@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,7 +37,7 @@ namespace ClipboardJisho
             lastClipboardContent = System.Windows.Clipboard.GetText();
 
             db = new DBAdapter();
-          
+
             var mpara = new NMeCab.MeCabParam();
             tagger = NMeCab.MeCabTagger.Create(mpara);
             ClipboardMonitor();
@@ -57,10 +58,18 @@ namespace ClipboardJisho
 
                     Dispatcher.Invoke(() =>
                     {
-                        if (lastClipboardContent != System.Windows.Clipboard.GetText())
+                        try
                         {
-                            lastClipboardContent = System.Windows.Clipboard.GetText();
-                            ClipboardMonitor();
+
+                            if (lastClipboardContent != System.Windows.Clipboard.GetText())
+                            {
+                                lastClipboardContent = System.Windows.Clipboard.GetText();
+                                ClipboardMonitor();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Windows.MessageBox.Show($"Error reading clipboard ({ex.Message})");
                         }
                     });
 
@@ -121,33 +130,41 @@ namespace ClipboardJisho
                         continue;
                     }
 
-                    db.FindDefinition(baseForm, index).ContinueWith(result =>
+                    var shouldFilter = SettingsManager.BufferedFilter.Any(regex => Regex.IsMatch(baseForm, regex));
+                    if (!shouldFilter)
                     {
-                        var alreadyExists = (from CardControl child in MainGrid.Children
-                                             where child.Kanji == result.Result.Item2.Japanese
-                                             select child.Kanji).Count() > 0;
-
-                        //if (alreadyExists)
-                        //return;
-
-                        var temp = new CardControl(result.Result.Item2, this);
-                        if (result.Result.Item2.Glossary.Count > 0 && result.Result.Item2.Japanese != null)
-                            wordsList.Add(new Tuple<int, CardControl>(result.Result.Item1, temp));
-                        //MainGrid.Children.Add(temp);
-
-
-                        MainGrid.Children.Clear();
-                        var sorted = from row in wordsList
-                                     orderby row.Item1
-                                     select row;
-                        Console.WriteLine("########## new order:");
-
-                        foreach (var row in sorted)
+                        db.FindDefinition(baseForm, index).ContinueWith(result =>
                         {
-                            Console.WriteLine(row.Item1 + " " + row.Item2.LabelTategaki.Text);
-                            MainGrid.Children.Add(row.Item2);
-                        }
-                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                            //var alreadyExists = (from CardControl child in MainGrid.Children
+                            //                     where child.Kanji == result.Result.Item2.Japanese
+                            //                     select child.Kanji).Count() > 0;
+
+                            //if (alreadyExists)
+                            //return;
+
+                            var temp = new CardControl(result.Result.Item2, this);
+                            if (result.Result.Item2.Glossary.Count > 0 && result.Result.Item2.Japanese != null)
+                                wordsList.Add(new Tuple<int, CardControl>(result.Result.Item1, temp));
+                            //MainGrid.Children.Add(temp);
+
+
+                            MainGrid.Children.Clear();
+                            var sorted = from row in wordsList
+                                         orderby row.Item1
+                                         select row;
+
+                            foreach (var row in sorted)
+                            {
+                                Console.WriteLine(row.Item1 + " " + row.Item2.LabelTategaki.Text);
+                                MainGrid.Children.Add(row.Item2);
+                            }
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Filtering word {baseForm}");
+                    }
+
                     index++;
                 }
 

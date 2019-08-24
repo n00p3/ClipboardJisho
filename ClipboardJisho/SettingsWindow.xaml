@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:ClipboardJisho"
         mc:Ignorable="d"
         Background="#FF2D2D30"
-        Title="ClipboardJisho - Settings" MinHeight="220" MinWidth="800" Width="702" Height="101.573">
+        ResizeMode="NoResize"
+        Title="ClipboardJisho - Settings" MinHeight="510" MinWidth="800" Width="702" Height="101.573">
 
     <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch">
 
@@ -24,6 +25,7 @@
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="280"></RowDefinition>
         </Grid.RowDefinitions>
         <Label Content="Japanese font:" Foreground="#FFC7C7C7" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
         <Label Grid.Column="1" x:Name="JapaneseFontName" Content="[Font name]" Foreground="#FFC7C7C7" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
@@ -46,5 +48,8 @@
         <Label Grid.Row="5"  Content="Max length of English text:" Foreground="#FFC7C7C7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Slider TickFrequency="1" IsSnapToTickEnabled="True" x:Name="EngMaxLen" Grid.Column="1" Grid.Row="5" Minimum="10" Maximum="500" ValueChanged="EngMaxLen_ValueChanged" />
         <Label Grid.Column="2" Grid.Row="5" Foreground="#FFC7C7C7" Content="{Binding ElementName=EngMaxLen, Path=Value, UpdateSourceTrigger=PropertyChanged}"></Label>
+
+        <Label Grid.Row="6" Foreground="#FFC7C7C7" HorizontalContentAlignment="Center" VerticalAlignment="Top" Content="Words to ignore (regex, one per line):"/>
+        <TextBox x:Name="FilterTextBox" Grid.Row="6" CaretBrush="White" AcceptsReturn="True" Foreground="#FFC7C7C7" BorderBrush="Black" Background="#19191c" Grid.ColumnSpan="2" Margin="0,0,10,0" Grid.Column="1" VerticalScrollBarVisibility="Auto" TextChanged="TextBox_TextChanged"></TextBox>
     </Grid>
 </Window>
