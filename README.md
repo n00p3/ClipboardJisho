@@ -8,3 +8,4 @@ TODO:
 - ~~Update content on back thread~~
 - ~~Move settings to separate window~~
 - ~~Remove duplicate words~~
+- Clean up the code
