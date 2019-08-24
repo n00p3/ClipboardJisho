@@ -28,6 +28,14 @@ namespace ClipboardJisho
         public CardControl(Word word, MainWindow parent)
         {
             InitializeComponent();
+            LabelTategaki.FontFamily = new FontFamily(SettingsManager.JapaneseFont.Name);
+            LabelTategaki.FontSize = SettingsManager.JapaneseFont.Size;
+
+            LabelRuby.FontFamily = new FontFamily(SettingsManager.JapaneseFont.Name);
+            LabelRuby.FontSize = SettingsManager.JapaneseFont.Size;
+
+            LabelGloss.FontFamily = new FontFamily(SettingsManager.EnglishFont.Name);
+            LabelGloss.FontSize = SettingsManager.EnglishFont.Size;
 
             if (word.Glossary?.Count == 0 || word.Glossary == null)
                 return;
@@ -43,9 +51,15 @@ namespace ClipboardJisho
                 tempGloss += $"{i + 1}. {word.Glossary[i]}\n";
             }
             tempGloss += $"{word.Glossary.Count}. {Gloss[word.Glossary.Count - 1]}";
+            if (tempGloss.Length > 200)
+                tempGloss = tempGloss.Substring(0, 200) + "...";
 
             LabelGloss.Text = tempGloss;
-            LabelRuby.Text = String.Join("、", Ruby);
+
+            var rubyStr = String.Join("、", Ruby);
+            if (rubyStr.Length > 20)
+                rubyStr = rubyStr.Substring(0, 20) + "…";
+            LabelRuby.Text = String.Join("、", rubyStr);
         }
     }
 }

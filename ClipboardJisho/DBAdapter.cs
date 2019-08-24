@@ -38,9 +38,20 @@ namespace ClipboardJisho
         {
             return await Task.Run(() =>
             {
-                using (var command = new SQLiteCommand("SELECT * FROM entry WHERE kanji = @word LIMIT 3", connection))
+                //using (var command = new SQLiteCommand("SELECT * FROM entry WHERE kanji = @word or reading like @like LIMIT 1", connection))
+                using (var command = new SQLiteCommand(@"
+                    SELECT * FROM entry 
+                    WHERE kanji = @word
+                        or reading like @before
+                        or reading like @after
+                        or reading like @middle
+                        LIMIT 5
+                    ", connection))
                 {
                     command.Parameters.Add(new SQLiteParameter("@word", word));
+                    command.Parameters.AddWithValue("@middle", "%," + word + ",%");
+                    command.Parameters.AddWithValue("@after", "%," + word);
+                    command.Parameters.AddWithValue("@before", word + ",%");
                     var dataAdapter = new SQLiteDataAdapter(command);
                     var dataTable = new DataTable();
                     dataAdapter.Fill(dataTable);
@@ -58,7 +69,14 @@ namespace ClipboardJisho
 
         ~DBAdapter()
         {
+            try
+            {
                 connection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Disposing sqlite connection error: {ex.Message}");
             }
         }
     }
+}

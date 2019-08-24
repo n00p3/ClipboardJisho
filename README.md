@@ -6,5 +6,5 @@ TODO:
 
 - Integrate with Textractor
 - ~~Update content on back thread~~
-- Move settings to separate window
+- ~~Move settings to separate window~~
 - ~~Remove duplicate words~~

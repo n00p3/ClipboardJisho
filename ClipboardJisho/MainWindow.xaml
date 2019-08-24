@@ -15,38 +15,11 @@
             <StackPanel x:Name="MainGrid" Margin="0,0,2,2" MaxWidth="{Binding ActualWidth, ElementName=OuterGrid}">
             </StackPanel>
         </ScrollViewer>
-        
-        
+
+
         <Grid VerticalAlignment="Bottom" Height="30" Margin="5" >
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25"></ColumnDefinition>
-                <ColumnDefinition Width="25"></ColumnDefinition>
-                <ColumnDefinition Width="25"></ColumnDefinition>
-
-                <ColumnDefinition Width="5"></ColumnDefinition>
-
-                <ColumnDefinition Width="25"></ColumnDefinition>
-                <ColumnDefinition Width="25"></ColumnDefinition>
-                <ColumnDefinition Width="25"></ColumnDefinition>
-                
-                <ColumnDefinition Width="5"></ColumnDefinition>
-                
-                <ColumnDefinition Width="75"></ColumnDefinition>
-
-
-                <ColumnDefinition ></ColumnDefinition>
-
-            </Grid.ColumnDefinitions>
-            <Button  FontFamily="Marlett" FontSize="7" Content="5" Height="25"/>
-            <Label Grid.Column="1" HorizontalAlignment="Center" Foreground="#FFC7C7C7">文</Label>
-            <Button Grid.Column="2" FontFamily="Marlett" FontSize="7" Content="6" Height="25"/>
-
-            <Button Grid.Column="4"  FontFamily="Marlett" FontSize="7" Content="5" Height="25"/>
-            <Label Grid.Column="5" HorizontalAlignment="Center" Foreground="#FFC7C7C7">A</Label>
-            <Button Grid.Column="6" FontFamily="Marlett" FontSize="7" Content="6" Height="25"/>
-
-            <Button Grid.Column="8"  FontSize="12" Content="settings" Height="25"/>
+            <Button x:Name="SettingsButton" Grid.Column="0"  FontSize="12" Content="settings" Height="25" HorizontalAlignment="Left" Click="SettingsButton_Click"/>
 
         </Grid>
     </Grid>

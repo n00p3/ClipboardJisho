@@ -11,7 +11,7 @@
         <Label  Margin="0,0,46,0" VerticalAlignment="Top" FontSize="10" Foreground="#FFC7C7C7" FontFamily="Meiryo" HorizontalAlignment="Right" Width="67" Padding="5,0"/>
         <!--<Label x:Name="LabelGloss" Content="ffefefe&#xA;" Margin="24,0,0,0" VerticalAlignment="Top" FontSize="16" Foreground="#FFC7C7C7" FontFamily="Meiryo" Padding="5,0" HorizontalAlignment="Left" />-->
         <!--MaxWidth="{Binding ActualWidth, ElementName=MainGrid}"-->
-        <TextBlock x:Name="LabelGloss" FontSize="16" Foreground="#FFC7C7C7" FontFamily="Meiryo" TextWrapping="WrapWithOverflow" Margin="47,0,0,0" Padding="5,0,35,0" HorizontalAlignment="Left"  MaxWidth="{Binding ActualWidth, ElementName=MainGrid}"></TextBlock>
+        <TextBlock x:Name="LabelGloss" FontSize="16" Foreground="#FFC7C7C7" FontFamily="Meiryo" TextWrapping="WrapWithOverflow" Margin="47,0,0,0" Padding="5,0,35,0" HorizontalAlignment="Left"  MaxWidth="{Binding ActualWidth, ElementName=MainGrid}"/>
         <Rectangle HorizontalAlignment="Left" Margin="46,0,0,0" Stroke="#55C7C7C7" StrokeThickness="1" Width="1"/>
         <tg:TategakiText x:Name="LabelRuby" Text="おっは～" FontFamily="Meiryo" Foreground="#FFC7C7C7" HorizontalAlignment="Left" Width="23" FontSize="16" Margin="23,0,0,0"/>
 

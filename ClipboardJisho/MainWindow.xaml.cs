@@ -115,5 +115,10 @@ namespace ClipboardJisho
 
 
         }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            (new SettingsWindow()).ShowDialog();
+        }
     }
 }
