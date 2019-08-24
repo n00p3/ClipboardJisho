@@ -26,6 +26,8 @@ namespace ClipboardJisho
             EnglishFontName.Content = SettingsManager.EnglishFont.Name + ", " + SettingsManager.EnglishFont.Size;
             AlwaysOnTopCheck.IsChecked = SettingsManager.AlwaysOnTop;
             MonitorMouseCheck.IsChecked = SettingsManager.MonitorMousePosition;
+            JpMaxLen.Value = SettingsManager.JpMaxLen;
+            EngMaxLen.Value = SettingsManager.EngMaxLen;
         }
 
         private void JapaneseFontButton_Click(object sender, RoutedEventArgs e)
@@ -69,6 +71,22 @@ namespace ClipboardJisho
             }
 
             EnglishFontName.Content = SettingsManager.EnglishFont.Name + ", " + SettingsManager.EnglishFont.Size;
+        }
+
+        private void JpMaxLen_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (e.OldValue == 0)
+                return;
+
+            SettingsManager.JpMaxLen = Convert.ToInt32(e.NewValue);
+        }
+
+        private void EngMaxLen_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (e.OldValue == 0)
+                return;
+
+            SettingsManager.EngMaxLen = Convert.ToInt32(e.NewValue);
         }
     }
 }

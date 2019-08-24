@@ -51,14 +51,14 @@ namespace ClipboardJisho
                 tempGloss += $"{i + 1}. {word.Glossary[i]}\n";
             }
             tempGloss += $"{word.Glossary.Count}. {Gloss[word.Glossary.Count - 1]}";
-            if (tempGloss.Length > 200)
-                tempGloss = tempGloss.Substring(0, 200) + "...";
+            if (tempGloss.Length > SettingsManager.EngMaxLen)
+                tempGloss = tempGloss.Substring(0, SettingsManager.EngMaxLen) + "...";
 
             LabelGloss.Text = tempGloss;
 
             var rubyStr = String.Join("、", Ruby);
-            if (rubyStr.Length > 20)
-                rubyStr = rubyStr.Substring(0, 20) + "…";
+            if (rubyStr.Length > SettingsManager.JpMaxLen)
+                rubyStr = rubyStr.Substring(0, SettingsManager.JpMaxLen) + "…";
             LabelRuby.Text = String.Join("、", rubyStr);
         }
     }

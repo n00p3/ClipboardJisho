@@ -13,9 +13,23 @@ namespace ClipboardJisho
         private static Font _japaneseFont;
         private static Font _englishFont;
         private static bool? _alwaysOnTop;
+        private static int? _jpMaxLen;
+        private static int? _engMaxLen;
         private static bool? _monitorMousePosition;
         private static Point? _windowPosition;
         private static System.Windows.Size? _windowSize;
+
+
+        public static int JpMaxLen
+        {
+            get { return _jpMaxLen ?? InitJpMaxLen(); }
+            set { _jpMaxLen = value; SetJpMaxLen(value); }
+        }
+        public static int EngMaxLen
+        {
+            get { return _engMaxLen ?? InitEngMaxLen(); }
+            set { _engMaxLen = value; SetEngMaxLen(value); }
+        }
 
         public static Point WindowPosition
         {
@@ -87,6 +101,42 @@ namespace ClipboardJisho
             return ret;
         }
 
+        static int InitJpMaxLen()
+        {
+            RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
+
+            var jpMaxLen = (string)writableKey.GetValue("JpMaxLen");
+            if (jpMaxLen == null)
+            {
+                writableKey.SetValue("JpMaxLen", 20, RegistryValueKind.String);
+                jpMaxLen = "20";
+            }
+
+            _jpMaxLen = Convert.ToInt32(jpMaxLen);
+
+            writableKey.Close();
+
+            return Convert.ToInt32(jpMaxLen);
+        }
+
+        static int InitEngMaxLen()
+        {
+            RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
+
+            var engMaxLen = (string)writableKey.GetValue("EngMaxLen");
+            if (engMaxLen == null)
+            {
+                writableKey.SetValue("EngMaxLen", 200, RegistryValueKind.String);
+                engMaxLen = "200";
+            }
+
+            _engMaxLen = Convert.ToInt32(engMaxLen);
+
+            writableKey.Close();
+
+            return Convert.ToInt32(engMaxLen);
+        }
+
         static Point InitWindowPosition()
         {
             RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
@@ -140,6 +190,26 @@ namespace ClipboardJisho
             writableKey.SetValue("WindowY", point.Y, RegistryValueKind.String);
 
             _windowPosition = point;
+            writableKey.Close();
+        }
+
+        static void SetJpMaxLen(int len)
+        {
+            RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
+
+            writableKey.SetValue("JpMaxLen", len, RegistryValueKind.String);
+
+            _jpMaxLen = len;
+            writableKey.Close();
+        }
+
+        static void SetEngMaxLen(int len)
+        {
+            RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
+
+            writableKey.SetValue("EngMaxLen", len, RegistryValueKind.String);
+
+            _engMaxLen = len;
             writableKey.Close();
         }
 

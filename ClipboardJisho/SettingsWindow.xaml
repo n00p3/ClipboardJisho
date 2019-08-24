@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:ClipboardJisho"
         mc:Ignorable="d"
         Background="#FF2D2D30"
-        Title="ClipboardJisho - Settings" MinHeight="176.573" MinWidth="800" Width="702" Height="101.573">
+        Title="ClipboardJisho - Settings" MinHeight="220" MinWidth="800" Width="702" Height="101.573">
 
     <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch">
 
@@ -21,8 +22,9 @@
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
-
         <Label Content="Japanese font:" Foreground="#FFC7C7C7" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
         <Label Grid.Column="1" x:Name="JapaneseFontName" Content="[Font name]" Foreground="#FFC7C7C7" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
         <Button x:Name="JapaneseFontButton" Content="Change" Grid.Column="2" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="75" Click="JapaneseFontButton_Click" />
@@ -34,7 +36,15 @@
         <Label Grid.Row="2"  Content="Monitor mouse position (automatic scroll):" Foreground="#FFC7C7C7" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
         <CheckBox x:Name="MonitorMouseCheck" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Checked="MonitorMouseCheck_Checked" Unchecked="MonitorMouseCheck_Unchecked"></CheckBox>
 
-        <Label Grid.Row="3"  Content="Always on top" Foreground="#FFC7C7C7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Label Grid.Row="3"  Content="Always on top:" Foreground="#FFC7C7C7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <CheckBox x:Name="AlwaysOnTopCheck" Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Checked="AlwaysOnTopCheck_Checked" Unchecked="AlwaysOnTopCheck_Unchecked"></CheckBox>
+
+        <Label Grid.Row="4"  Content="Max length of Japanese text:" Foreground="#FFC7C7C7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Slider TickFrequency="1" IsSnapToTickEnabled="True" x:Name="JpMaxLen" Grid.Column="1" Grid.Row="4" Minimum="5" Maximum="200" ValueChanged="JpMaxLen_ValueChanged" />
+        <Label Grid.Column="2" Grid.Row="4" Foreground="#FFC7C7C7" Content="{Binding ElementName=JpMaxLen, Path=Value, UpdateSourceTrigger=PropertyChanged}"></Label>
+        
+        <Label Grid.Row="5"  Content="Max length of English text:" Foreground="#FFC7C7C7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Slider TickFrequency="1" IsSnapToTickEnabled="True" x:Name="EngMaxLen" Grid.Column="1" Grid.Row="5" Minimum="10" Maximum="500" ValueChanged="EngMaxLen_ValueChanged" />
+        <Label Grid.Column="2" Grid.Row="5" Foreground="#FFC7C7C7" Content="{Binding ElementName=EngMaxLen, Path=Value, UpdateSourceTrigger=PropertyChanged}"></Label>
     </Grid>
 </Window>
