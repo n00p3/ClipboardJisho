@@ -29,37 +29,19 @@ namespace ClipboardJisho
         {
             InitializeComponent();
 
-            //for (var i = 0; i < 2; i++)
-            //{
-            //    MainGrid.Children.Add(new CardControl("漢字", new List<string> { "kanji", "nananana"}, this));
-            //}
-
-            //var t = new CardControl("漢字", new List<string> { "kanji", "nanang sdgsdgdsgsdgdsg sdgdsgsdgsdgdsgsd gsdgsdgdsgsdgdsgds gsdgdsgdsgsdg dsgdana", "cscsc", "cscscs" }, this);
-            //MainGrid.Children.Add(t);
-            //MainGrid.Children.Add(new CardControl("漢字漢字漢字", new List<string> { "kanji" }, this));
-            //MainGrid.Children.Add(new CardControl("漢字", new List<string> { "kanji", "nananana" }, this));
-
             db = new DBAdapter();
-            //db.FindDefinition("漢字");
-
-            //var mpara = new NMeCab.MeCabParam();
-            //var tagger = NMeCab.MeCabTagger.Create(mpara);
-            //var node = tagger.ParseToNode("今日はいい天気ですね");
-
-            //while (node != null)
-            //{
-            //    if (node.CharType > 0)
-            //        Console.WriteLine($"{node.Surface}, {node.Feature}");
-
-            //    node = node.Next;
-            //}
+          
             var mpara = new NMeCab.MeCabParam();
             tagger = NMeCab.MeCabTagger.Create(mpara);
 
             ClipboardMonitor();
 
-            //var notifier = new ClipboardNotification();
             ClipboardNotification.ClipboardUpdate += ClipboardChanged;
+
+            Left = SettingsManager.WindowPosition.X;
+            Top = SettingsManager.WindowPosition.Y;
+            Width = SettingsManager.WindowSize.Width;
+            Height = SettingsManager.WindowSize.Height;
 
         }
 
@@ -119,6 +101,21 @@ namespace ClipboardJisho
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             (new SettingsWindow()).ShowDialog();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // Ignore on init.
+            if (e.PreviousSize == new Size(0, 0))
+                return;
+
+            SettingsManager.WindowSize = e.NewSize;
+
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            SettingsManager.WindowPosition = new System.Drawing.Point(Convert.ToInt32(Left), Convert.ToInt32(Top));
         }
     }
 }

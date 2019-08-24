@@ -14,10 +14,24 @@ namespace ClipboardJisho
         private static Font _englishFont;
         private static bool? _alwaysOnTop;
         private static bool? _monitorMousePosition;
+        private static Point? _windowPosition;
+        private static System.Windows.Size? _windowSize;
+
+        public static Point WindowPosition
+        {
+            get { return _windowPosition ?? InitWindowPosition(); }
+            set { _windowPosition = value; SetWindowPosition(value); }
+        }
+        public static System.Windows.Size WindowSize
+        {
+            get { return _windowSize ?? InitWindowSize(); }
+            set { _windowSize = value; SetWindowSize(value); }
+        }
+
         public static Font JapaneseFont
         {
             get { return _japaneseFont ?? InitJapaneseFont(); }
-            set { _japaneseFont = value; SetJapaneseFont(value);  }
+            set { _japaneseFont = value; SetJapaneseFont(value); }
         }
         public static Font EnglishFont
         {
@@ -71,6 +85,73 @@ namespace ClipboardJisho
             writableKey.Close();
 
             return ret;
+        }
+
+        static Point InitWindowPosition()
+        {
+            RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
+
+            var windowX = (string)writableKey.GetValue("WindowX");
+            var windowY = (string)writableKey.GetValue("WindowY");
+            if (windowX == null || windowY == null)
+            {
+                writableKey.SetValue("windowX", 100, RegistryValueKind.String);
+                writableKey.SetValue("windowY", 100, RegistryValueKind.String);
+                windowX = "100";
+                windowY = "100";
+            }
+
+            var pos = new Point(Convert.ToInt32(windowX), Convert.ToInt32(windowY));
+
+            WindowPosition = pos;
+
+            writableKey.Close();
+
+            return pos;
+        }
+
+        static System.Windows.Size InitWindowSize()
+        {
+            RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
+
+            var windowW = (string)writableKey.GetValue("WindowW");
+            var windowH = (string)writableKey.GetValue("WindowH");
+            if (windowW == null || windowH == null)
+            {
+                writableKey.SetValue("windowW", 300, RegistryValueKind.String);
+                writableKey.SetValue("windowH", 800, RegistryValueKind.String);
+                windowW = "300";
+                windowH = "800";
+            }
+            var size = new System.Windows.Size(Convert.ToInt32(windowW), Convert.ToInt32(windowH));
+
+            WindowSize = size;
+
+            writableKey.Close();
+
+            return size;
+        }
+
+        static void SetWindowPosition(Point point)
+        {
+            RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
+
+            writableKey.SetValue("WindowX", point.X, RegistryValueKind.String);
+            writableKey.SetValue("WindowY", point.Y, RegistryValueKind.String);
+
+            _windowPosition = point;
+            writableKey.Close();
+        }
+
+        static void SetWindowSize(System.Windows.Size size)
+        {
+            RegistryKey writableKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\ClipboardJisho");
+
+            writableKey.SetValue("WindowW", size.Width, RegistryValueKind.String);
+            writableKey.SetValue("WindowH", size.Height, RegistryValueKind.String);
+
+            _windowSize = size;
+            writableKey.Close();
         }
 
         static void SetAlwaysOnTop(bool onOff)

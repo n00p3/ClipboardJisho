@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="612.05" Width="271.045"
         Background="#2D2D30" ScrollViewer.CanContentScroll="True"
-        xmlns:fa="http://schemas.fontawesome.io/icons/" 
+        xmlns:fa="http://schemas.fontawesome.io/icons/" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" 
         
         >
     <Grid x:Name="OuterGrid">
