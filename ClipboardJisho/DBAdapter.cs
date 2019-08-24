@@ -34,14 +34,19 @@ namespace ClipboardJisho
             }
         }
 
-        public async Task<Word> FindDefinition(string word)
+        public async Task<Tuple<int, Word>> FindDefinition(string word, int index)
         {
             return await Task.Run(() =>
             {
                 //using (var command = new SQLiteCommand("SELECT * FROM entry WHERE kanji = @word or reading like @like LIMIT 1", connection))
                 using (var command = new SQLiteCommand(@"
                     SELECT * FROM entry 
-                    WHERE kanji = @word
+                    WHERE 
+                        kanji = @word
+                        or kanji like @before
+                        or kanji like @after
+                        or kanji like @middle
+                        or reading = @word
                         or reading like @before
                         or reading like @after
                         or reading like @middle
@@ -62,7 +67,7 @@ namespace ClipboardJisho
                         Japanese = word,
                         Ruby = dataTable.AsEnumerable().Select(row => row.Field<string>("reading")).ToList()
                     };
-                    return ret;
+                    return new Tuple<int, Word>(index, ret);
                 }
             });
         }

@@ -27,10 +27,13 @@ namespace ClipboardJisho
         DBAdapter db;
         public int test = 100;
         private bool isMouseOverWindow = false;
+        private string lastClipboardContent;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            lastClipboardContent = System.Windows.Clipboard.GetText();
 
             db = new DBAdapter();
           
@@ -46,11 +49,21 @@ namespace ClipboardJisho
             Width = SettingsManager.WindowSize.Width;
             Height = SettingsManager.WindowSize.Height;
 
+
             Task.Run(() =>
             {
                 while (true)
                 {
                     Thread.Sleep(50);
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (lastClipboardContent != System.Windows.Clipboard.GetText())
+                        {
+                            lastClipboardContent = System.Windows.Clipboard.GetText();
+                            ClipboardMonitor();
+                        }
+                    });
 
                     if (isMouseOverWindow)
                         continue;
@@ -91,29 +104,41 @@ namespace ClipboardJisho
             var node = tagger.ParseToNode(ClipboardNotification.Content);
 
             MainGrid.Children.Clear();
+            var index = 0;
+            var wordsList = new List<Tuple<int, CardControl>>();
 
             while (node != null)
             {
                 if (node.CharType > 0)
                 {
-
-                    db.FindDefinition(node.Surface).ContinueWith(word =>
+                    db.FindDefinition(node.Surface, index).ContinueWith(result =>
                     {
-
                         var alreadyExists = (from CardControl child in MainGrid.Children
-                                             where child.Kanji == word.Result.Japanese
+                                             where child.Kanji == result.Result.Item2.Japanese
                                              select child.Kanji).Count() > 0;
 
-                        if (alreadyExists)
-                            return;
+                        //if (alreadyExists)
+                        //return;
 
-                        var temp = new CardControl(word.Result, this);
-                        if (word.Result.Glossary.Count > 0 && word.Result.Japanese != null)
-                            MainGrid.Children.Add(temp);
+                        var temp = new CardControl(result.Result.Item2, this);
+                        if (result.Result.Item2.Glossary.Count > 0 && result.Result.Item2.Japanese != null)
+                            wordsList.Add(new Tuple<int, CardControl>(result.Result.Item1, temp));
+                        //MainGrid.Children.Add(temp);
 
 
+                        MainGrid.Children.Clear();
+                        var sorted = from row in wordsList
+                                     orderby row.Item1
+                                     select row;
+                        Console.WriteLine("########## new order:");
+
+                        foreach (var row in sorted)
+                        {
+                            Console.WriteLine(row.Item1 + " " + row.Item2.LabelTategaki.Text);
+                            MainGrid.Children.Add(row.Item2);
+                        }
                     }, TaskScheduler.FromCurrentSynchronizationContext());
-
+                    index++;
                 }
 
 
