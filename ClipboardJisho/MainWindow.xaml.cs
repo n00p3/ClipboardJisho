@@ -39,7 +39,6 @@ namespace ClipboardJisho
           
             var mpara = new NMeCab.MeCabParam();
             tagger = NMeCab.MeCabTagger.Create(mpara);
-
             ClipboardMonitor();
 
             ClipboardNotification.ClipboardUpdate += ClipboardChanged;
@@ -111,7 +110,18 @@ namespace ClipboardJisho
             {
                 if (node.CharType > 0)
                 {
-                    db.FindDefinition(node.Surface, index).ContinueWith(result =>
+                    var baseForm = "";
+                    try
+                    {
+                        baseForm = node.Feature.Split(',')[6];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        continue;
+                    }
+
+                    db.FindDefinition(baseForm, index).ContinueWith(result =>
                     {
                         var alreadyExists = (from CardControl child in MainGrid.Children
                                              where child.Kanji == result.Result.Item2.Japanese
