@@ -69,7 +69,7 @@ namespace ClipboardJisho
                         }
                         catch (Exception ex)
                         {
-                            System.Windows.MessageBox.Show($"Error reading clipboard ({ex.Message})");
+                            //System.Windows.MessageBox.Show($"Error reading clipboard ({ex.Message})");
                         }
                     });
 
